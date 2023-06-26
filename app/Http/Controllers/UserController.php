@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -20,6 +22,19 @@ class UserController extends Controller
     public function landing(){
         return view('urban.landing');
     }
+    public function item(){
+        return view('urban.item',[
+            'products' => Product::all()
+        ]);
+    }
+    public function users(){
+        return view('admin.dashboard',[
+            'users' => User::all()
+        ]);
+    }
+    // public function edit(User $user){
+    //     return view('admin.edit', ['user' => $user]);        
+    // }
 
     public function store(Request $request){
         $formFields = $request->validate([
@@ -31,8 +46,10 @@ class UserController extends Controller
             'age' => 'required',
         ]);
 
-        $formFields['password'] = md5($formFields['password']);
+        // $formFields['password'] = md5($formFields['password']);
+        $formFields['password'] = Hash::make(value: $formFields['password']);
 
+        
         User::create($formFields);
 
         return redirect('/urban/login')->with('message', 'Registration Complete!');
@@ -45,7 +62,7 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        $formFields['password'] = md5($formFields['password']);
+        // $formFields['password'] = md5($formFields['password']);
 
         if(auth()->attempt($formFields)){
 
@@ -55,5 +72,15 @@ class UserController extends Controller
         }
         // dd($formFields);
         return back()->withErrors(['email' => 'Invalid Email', 'password' => 'Wrong Password' ])->onlyInput('email','password');
+    }
+    public function logout(Request $request){
+        
+        auth()->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('message', 'You have been logout');
+
     }
 }

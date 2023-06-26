@@ -1,28 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-</head>
-<body>
-    <x-flash-message />
-    <h1>Login</h1>
-    <form action="/urban/validate" method="post">
-        @csrf
-        <input type="email" name="email" placeholder="Email" value="{{old('email')}}"><br>
-        @error('email')
-            <p>{{$message}}</p>
-        @enderror
-        
-        <input type="password" name="password" placeholder="Password" value="{{old('password')}}"><br>
-        @error('password')
-            <p>{{$message}}</p>
-        @enderror
-        
-        <button type="submit">Login</button><br>
-        <a href="/urban/create">Dont have an account?</a>
-    </form>
-</body>
-</html>
+<x-form>
+    <div class="wrapper login"> 
+        <x-flash-message />
+        <div class="container">
+            <div class="col-left">
+                <div class="login-text">
+                    <h2>Welcome Back</h2>
+                    <p>Create your account.<br>It's totally free.</p>
+                    <a href="/urban/create" class="btn">Sign Up</a>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="login-form">
+                    <h2>Login</h2>
+                    <form action="/urban/validate" method="post">
+                        @csrf
+                        <p>
+                            <input type="text" name="email" placeholder="Email" value="{{old('email')}}">
+                        </p>
+                        @error('email')
+                            <p style="color: red">{{$message}}</p>
+                        @enderror
+
+                        <p>
+                            <input type="password" name="password" placeholder="Password" value="{{old('password')}}">
+                        </p>
+                        @error('password')
+                            <p style="color: red">{{$message}}</p>
+                        @enderror
+
+                        <p>
+                            <input type="submit" value="Sign In">
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</x-form>
